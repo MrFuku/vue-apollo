@@ -114,7 +114,7 @@ const Mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
         name: { type: GraphQLString },
         genre: { type: GraphQLString },
-        directorId: { type: GraphQLInt}
+        directorId: { type: GraphQLInt },
       },
       resolve(_, args) {
         let updateMovie = {}
@@ -140,6 +140,24 @@ const Mutation = new GraphQLObjectType({
         return Director.findByIdAndUpdate(args.id, updateDirector, {
           new: true,
         })
+      },
+    },
+    deleteMovie: {
+      type: MovieType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(_, args) {
+        return Movie.findByIdAndRemove(args.id)
+      },
+    },
+    deleteDirector: {
+      type: DirectorType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(_, args) {
+        return Director.findByIdAndRemove(args.id)
       },
     },
   },
