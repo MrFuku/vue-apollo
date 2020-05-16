@@ -1,6 +1,7 @@
 const graphql = require('graphql')
 const Movie = require('../models/movie')
-const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema } = graphql
+const Director = require('../models/director')
+const { GraphQLObjectType, GraphQLID, GraphQLString, GraphQLSchema, GraphQLInt } = graphql
 
 const MovieType = new GraphQLObjectType({
   name: 'Movie',
@@ -8,6 +9,15 @@ const MovieType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
+  }),
+})
+
+const DirectorType = new GraphQLObjectType({
+  name: 'Director',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    age: { type: GraphQLInt },
   }),
 })
 
@@ -19,6 +29,13 @@ const RootQuery = new GraphQLObjectType({
       args: { id: { type: GraphQLID } },
       resolve(parents, args) {
         return Movie.findById(args.id)
+      },
+    },
+    director: {
+      type: DirectorType,
+      args: { id: { type: GraphQLID } },
+      resolve(parents, args) {
+        return Director.findById(args.id)
       },
     },
   },
