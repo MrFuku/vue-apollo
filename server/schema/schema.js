@@ -8,6 +8,7 @@ const {
   GraphQLSchema,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull,
 } = graphql
 
 const MovieType = new GraphQLObjectType({
@@ -105,6 +106,40 @@ const Mutation = new GraphQLObjectType({
         })
 
         return director.save()
+      },
+    },
+    updateMovie: {
+      type: MovieType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        directorId: { type: GraphQLInt}
+      },
+      resolve(_, args) {
+        let updateMovie = {}
+        args.name && (updateMovie.name = args.name)
+        args.genre && (updateMovie.genre = args.genre)
+        args.directorId && (updateMovie.directorId = args.directorId)
+        return Movie.findByIdAndUpdate(args.id, updateMovie, {
+          new: true,
+        })
+      },
+    },
+    updateDirector: {
+      type: DirectorType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        age: { type: GraphQLInt },
+      },
+      resolve(_, args) {
+        let updateDirector = {}
+        args.name && (updateDirector.name = args.name)
+        args.age && (updateDirector.age = args.age)
+        return Director.findByIdAndUpdate(args.id, updateDirector, {
+          new: true,
+        })
       },
     },
   },
