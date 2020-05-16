@@ -1,5 +1,17 @@
 version: '3'
 services:
+  front:
+    build: ./front
+    tty: true
+    ports:
+      - 8080:8080
+    volumes:
+      - ./front/:/front
+      - /front/node_modules
+    depends_on:
+      - server
+    command: yarn serve
+
   server:
     build: ./server
     tty: true

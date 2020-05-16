@@ -3,7 +3,7 @@ FROM node:14.2-alpine3.11
 ENV LANG ja_JP.UTF-8
 ENV TZ Asia/Tokyo
 
-WORKDIR /server
+WORKDIR /front
 
 RUN apk update
 
