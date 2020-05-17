@@ -24,8 +24,13 @@
 </template>
 
 <script>
+import { MOVIE_LIST } from "../graphql/queries";
+
 export default {
-  name: "MovieList"
+  name: "MovieList",
+  apollo: {
+    movies: MOVIE_LIST
+  }
 };
 </script>
 
