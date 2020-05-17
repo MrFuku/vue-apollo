@@ -4,7 +4,7 @@
       title="映画監督"
       class="mt-4"
     >
-      <b-form>
+      <b-form @submit.prevent="addDirector">
         <b-form-group
           label="監督名"
           label-for="input-director-name"
@@ -75,9 +75,12 @@
           <b-form-select
             v-model="form.movie.directorId"
             size="sm"
-            
           >
-            <b-form-select-option v-for="director in directors" :key="director.id" :value="director.id">{{ director.name }}</b-form-select-option>
+            <b-form-select-option
+              v-for="director in directors"
+              :key="director.id"
+              :value="director.id"
+            >{{ director.name }}</b-form-select-option>
           </b-form-select>
         </b-form-group>
         <b-button
@@ -90,7 +93,12 @@
 </template>
 
 <script>
-import { DIRECTOR_LIST, ADD_MOVIE, MOVIE_LIST } from "../graphql/queries";
+import {
+  MOVIE_LIST,
+  DIRECTOR_LIST,
+  ADD_MOVIE,
+  ADD_DIRECTOR
+} from "../graphql/queries";
 
 export default {
   name: "Sidenav",
@@ -127,6 +135,28 @@ export default {
             const data = store.readQuery({ query: MOVIE_LIST });
             data.movies.push(addMovie);
             store.writeQuery({ query: MOVIE_LIST, data });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    addDirector() {
+      const { name, age } = this.form.director;
+      this.$apollo
+        .mutate({
+          mutation: ADD_DIRECTOR,
+          variables: {
+            name,
+            age: parseInt(age)
+          },
+          update: (store, { data: { addDirector } }) => {
+            const data = store.readQuery({ query: DIRECTOR_LIST });
+            data.directors.push(addDirector);
+            store.writeQuery({ query: DIRECTOR_LIST, data });
           }
         })
         .then(data => {
