@@ -39,8 +39,13 @@
 </template>
 
 <script>
+import { DIRECTOR_LIST } from "../graphql/queries";
+
 export default {
-  name: "Sidenav"
+  name: "Sidenav",
+  apollo: {
+    directors: DIRECTOR_LIST,
+  }
 };
 </script>
 
