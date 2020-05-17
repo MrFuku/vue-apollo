@@ -10,6 +10,7 @@
           label-for="input-director-name"
         >
           <b-form-input
+            v-model="form.director.name"
             id="input-director-name"
             type="text"
             placeholder="監督名"
@@ -22,6 +23,7 @@
           label-for="input-director-age"
         >
           <b-form-input
+            v-model="form.director.age"
             id="input-director-age"
             type="number"
             placeholder="年齢"
@@ -39,12 +41,13 @@
       title="映画作品"
       class="mt-4"
     >
-      <b-form>
+      <b-form @submit.prevent="addMovie">
         <b-form-group
           label="タイトル"
           label-for="input-movie-name"
         >
           <b-form-input
+            v-model="form.movie.name"
             id="input-movie-name"
             type="text"
             placeholder="タイトル"
@@ -57,6 +60,7 @@
           label-for="input-movie-genre"
         >
           <b-form-input
+            v-model="form.movie.genre"
             id="input-movie-genre"
             type="text"
             placeholder="ジャンル"
@@ -69,6 +73,7 @@
           label-for="input-movie-director"
         >
           <b-form-select
+            v-model="form.movie.directorId"
             size="sm"
             
           >
@@ -85,12 +90,52 @@
 </template>
 
 <script>
-import { DIRECTOR_LIST } from "../graphql/queries";
+import { DIRECTOR_LIST, ADD_MOVIE, MOVIE_LIST } from "../graphql/queries";
 
 export default {
   name: "Sidenav",
   apollo: {
     directors: DIRECTOR_LIST
+  },
+  data() {
+    return {
+      form: {
+        director: {
+          name: "",
+          age: ""
+        },
+        movie: {
+          name: "",
+          genre: "",
+          directorId: ""
+        }
+      }
+    };
+  },
+  methods: {
+    addMovie() {
+      const { name, genre, directorId } = this.form.movie;
+      this.$apollo
+        .mutate({
+          mutation: ADD_MOVIE,
+          variables: {
+            name,
+            genre,
+            directorId
+          },
+          update: (store, { data: { addMovie } }) => {
+            const data = store.readQuery({ query: MOVIE_LIST });
+            data.movies.push(addMovie);
+            store.writeQuery({ query: MOVIE_LIST, data });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 };
 </script>
