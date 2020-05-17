@@ -13,10 +13,13 @@
         </b-tr>
       </b-thead>
       <b-tbody>
-        <b-tr>
-          <b-td>となりのトトロ</b-td>
-          <b-td>アニメ</b-td>
-          <b-td>宮崎 駿</b-td>
+        <b-tr
+          v-for="movie in movies"
+          :key="movie.id"
+        >
+          <b-td>{{ movie.name }}</b-td>
+          <b-td>{{ movie.genre }}</b-td>
+          <b-td>{{ movie.director.name }}</b-td>
         </b-tr>
       </b-tbody>
     </b-table-simple>
