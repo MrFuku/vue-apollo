@@ -46,3 +46,16 @@ export const ADD_DIRECTOR = gql`
     }
   }
 `
+export const DELETE_MOVIE = gql`
+  mutation($id: ID!) {
+    deleteMovie(id: $id) {
+      id
+      name
+      genre
+      director {
+        id
+        name
+      }
+    }
+  }
+`
